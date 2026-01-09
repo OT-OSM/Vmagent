@@ -15,15 +15,14 @@
     group: "{{ vmagent_group }}"
     mode: "0755"
 
-- name: Create empty prometheus.yml if it does not exist
-  file:
-    path: "{{ vmagent_promscrape_config }}"
-    state: touch
+- name: Configure prometheus.yml
+  template:
+    src: prometheus.yml.j2
+    dest: "{{ vmagent_promscrape_config }}"
     owner: "{{ vmagent_user }}"
     group: "{{ vmagent_group }}"
     mode: "0644"
-    modification_time: preserve
-    access_time: preserve
+  notify: restart vmagent
 
 - name: Create vmagent systemd service
   template:

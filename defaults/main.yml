@@ -9,3 +9,5 @@ vmagent_config_dir: "/etc/vmagent"
 vmagent_remote_write_url: "http://localhost:8428/api/v1/write"
 vmagent_data_dir: "/var/lib/vmagent"
 vmagent_promscrape_config: "/etc/vmagent/prometheus.yml"
+vmagent_scrape_targets:
+  - "localhost:9100"
