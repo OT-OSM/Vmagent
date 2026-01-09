@@ -1,0 +1,11 @@
+---
+vmagent_version: "v1.97.1"
+vmagent_arch: "amd64"
+vmagent_download_url: "https://github.com/VictoriaMetrics/VictoriaMetrics/releases/download/{{ vmagent_version }}/vmutils-linux-{{ vmagent_arch }}-{{ vmagent_version }}.tar.gz"
+vmagent_bin_path: "/usr/local/bin/vmagent-prod"
+vmagent_user: "vmagent"
+vmagent_group: "vmagent"
+vmagent_config_dir: "/etc/vmagent"
+vmagent_remote_write_url: "http://localhost:8428/api/v1/write"
+vmagent_data_dir: "/var/lib/vmagent"
+vmagent_promscrape_config: "/etc/vmagent/prometheus.yml"

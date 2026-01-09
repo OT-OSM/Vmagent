@@ -1,0 +1,18 @@
+[Unit]
+Description=vmagent service
+After=network.target
+
+[Service]
+Type=simple
+User={{ vmagent_user }}
+Group={{ vmagent_group }}
+ExecStart={{ vmagent_bin_path }} \
+  -promscrape.config={{ vmagent_promscrape_config }} \
+  -remoteWrite.tmpDataPath={{ vmagent_data_dir }} \
+  -remoteWrite.url={{ vmagent_remote_write_url }}
+
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
