@@ -1,3 +1,91 @@
 ---
-- import_tasks: install.yml
-- import_tasks: configure.yml
+- name: Install dependencies
+  apt:
+    name:
+      - ca-certificates
+      - tar
+      - gzip
+    state: present
+    update_cache: yes
+  when: ansible_os_family == "Debian"
+
+- name: Create vmagent group
+  group:
+    name: "{{ vmagent_group }}"
+    system: yes
+    state: present
+
+- name: Create vmagent user
+  user:
+    name: "{{ vmagent_user }}"
+    group: "{{ vmagent_group }}"
+    system: yes
+    shell: /sbin/nologin
+    create_home: no
+    state: present
+
+- name: Download and unarchive vmagent
+  unarchive:
+    src: "{{ vmagent_download_url }}"
+    dest: "/tmp"
+    remote_src: yes
+  register: vmagent_download
+
+- name: Install vmagent binary
+  copy:
+    src: "/tmp/vmagent-prod"
+    dest: "{{ vmagent_bin_dir }}/vmagent"
+    mode: "0755"
+    owner: root
+    group: root
+    remote_src: yes
+  notify: restart vmagent
+
+- name: Create configuration directory
+  file:
+    path: "{{ vmagent_config_dir }}"
+    state: directory
+    owner: "{{ vmagent_user }}"
+    group: "{{ vmagent_group }}"
+    mode: "0755"
+
+- name: Create data directory
+  file:
+    path: "{{ vmagent_data_dir }}"
+    state: directory
+    owner: "{{ vmagent_user }}"
+    group: "{{ vmagent_group }}"
+    mode: "0755"
+
+- name: Render prometheus.yml config
+  template:
+    src: prometheus.yml.j2
+    dest: "{{ vmagent_config_dir }}/prometheus.yml"
+    owner: "{{ vmagent_user }}"
+    group: "{{ vmagent_group }}"
+    mode: "0644"
+  notify: restart vmagent
+
+- name: Create systemd service file
+  template:
+    src: vmagent.service.j2
+    dest: /etc/systemd/system/vmagent.service
+    owner: root
+    group: root
+    mode: "0644"
+  notify: restart vmagent
+
+- name: Ensure vmagent service is running and enabled
+  systemd:
+    name: vmagent
+    state: started
+    enabled: yes
+    daemon_reload: yes
+
+- name: Cleanup temporary files
+  file:
+    path: "/tmp/{{ item }}"
+    state: absent
+  with_items:
+    - vmagent-prod
+    - vmutils-{{ vmagent_arch }}-v{{ vmagent_version }}.tar.gz
