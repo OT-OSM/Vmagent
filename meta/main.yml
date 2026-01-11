@@ -1,14 +1,15 @@
----
 galaxy_info:
-  role_name: Vmagent
-  author: Sunny Kumar
-  description:  vmagent setup
-  license: MIT
-  min_ansible_version: "2.12"
-
+  author: sunny
+  description: Ansible role to install and configure vmagent
+  company: "Personal"
+  license: "MIT"
+  min_ansible_version: "2.9"
   platforms:
     - name: Ubuntu
       versions:
         - all
-
+  galaxy_tags:
+    - web
+    - system
+    - monitoring
 dependencies: []
