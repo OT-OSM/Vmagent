@@ -1,18 +1,18 @@
 [Unit]
-Description=vmagent service
+Description=VictoriaMetrics vmagent service
 After=network.target
 
 [Service]
 Type=simple
 User={{ vmagent_user }}
 Group={{ vmagent_group }}
-ExecStart={{ vmagent_bin_path }} \
-  -promscrape.config={{ vmagent_promscrape_config }} \
-  -remoteWrite.tmpDataPath={{ vmagent_data_dir }} \
+ExecStart={{ vmagent_bin_dir }}/vmagent \
+  -promscrape.config={{ vmagent_config_dir }}/prometheus.yml \
+  -remoteWrite.tmpDataPath={{ vmagent_data_dir }}/remotewrite-data \
   -remoteWrite.url={{ vmagent_remote_write_url }}
-
 Restart=always
 RestartSec=10
+LimitNOFILE=65536
 
 [Install]
 WantedBy=multi-user.target
