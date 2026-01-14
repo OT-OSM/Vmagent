@@ -4,7 +4,7 @@ global:
     dc: {{ dc }}
     env: {{ env }}
     owner: {{ owner }}
-    bare_metal: "true"
+    bare_metal: {{ bare_metal }}
 
 scrape_configs:
   - job_name: 'node_exporter'
