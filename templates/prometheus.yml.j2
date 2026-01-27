@@ -15,5 +15,5 @@ scrape_configs:
           service: node_exporter
 
     relabel_configs:
-      - target_label: node_name
+      - target_label: nodename
         replacement: "{{ ansible_hostname }}"
