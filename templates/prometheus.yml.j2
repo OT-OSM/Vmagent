@@ -7,7 +7,7 @@ global:
     bare_metal: "{{ bare_metal }}"
 
 scrape_configs:
-  - job_name: node_exporter
+  - job_name: "{{ dc }}"
     static_configs:
       - targets:
           - "{{ ansible_default_ipv4.address }}:9100"
